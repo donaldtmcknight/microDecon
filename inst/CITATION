@@ -1,0 +1,15 @@
+citHeader("To cite this package in publications, please use:")
+
+
+citEntry(entry = "manual",
+    title = "microDecon: A highly accurate read-subtraction tool for the post-sequencing removal of contamination in metabarcoding studies",
+    author = personList(as.person("Donald T. McKnight"),
+		as.person("Roger Huerlimann"),
+		as.person("Deborah S. Bower"),
+		as.person("Lin Schwarzkopf"),
+		as.person("Ross A. Alford"),
+		as.person("Kyall R. Zenger")),
+    year = "2018",
+    textVersion  = paste("McKnight, D. T., R. Huerlimann, D. S. Bower, L. Schwarzkopf, R. A. Alford, and K. R. Zenger. (2018).",
+        "microDecon: A highly accurate read-subtraction tool for the post-sequencing removal of contamination in metabarcoding studies.")
+)
