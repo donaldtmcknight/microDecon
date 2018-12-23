@@ -1,14 +1,14 @@
 # microDecon
 An R package for removing contamination from metabarcoding (e.g., microbiome) datasets post-sequencing
 
-##Description
+## Description
 Contamination is a serious and widespread problem in metabarcoding studies (particularly bacterial microbiome studies). microDecon provides 
 an easy method of identifying and removing contaminant reads post-sequencing. It uses the data in one or more blank samples that were carried
 throughout the entire project (collection, extraction, amplification, and sequencing) to identify and remove the reads in each actual sample 
 that are from contamination. Because it removes reads rather than entire OTUs, it is a large improvement over existing methods. A more
 detailed explanation of the algorithms it uses can be found in the user's guide.
 
-##Installation
+## Installation
 Simply copy, paste, and run the following code in R.
 ```#Instal devtools (if not already installed)
 install.packages("devtools")
@@ -17,7 +17,7 @@ library(devtools)
 #Install microDecon
 devtools::install_github(“donaldtmcknight/microDecon")```
 
-##Running the package
+## Running the package
 Load microDecon
 ```library(microDecon)```
 
