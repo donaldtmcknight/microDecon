@@ -15,11 +15,13 @@ install.packages("devtools")
 #Load devtools
 library(devtools)
 #Install microDecon
-devtools::install_github(“donaldtmcknight/microDecon")```
+devtools::install_github(“donaldtmcknight/microDecon")
+```
 
 ## Running the package
 Load microDecon
-```library(microDecon)```
+```library(microDecon)
+```
 
 Load a data frame with a column of OTU IDs, at least one column from a blank sample, at least one column from actual samples, and (optional)
 a column with taxonomic information. For example, the following OTU data frame has two blanks, three samples (from two populations), and taxa
@@ -31,12 +33,14 @@ column (the columns must be in the order: OTU IDs, blanks, samples [samples shou
                         c(120,60,1200,4,400),
                         c(60,20,1400,3,600),
                         c("k_Fungi","k__Fungi","k__Fungi; p__Ascomycota","p__Basidiomycota","k__Fungi"))
-colnames(example) <- c("OTU_ID","Blank1","Blank2","Pop1_Sample1","Pop1_Sample2","Pop2_Sample3","Taxa")```
+colnames(example) <- c("OTU_ID","Blank1","Blank2","Pop1_Sample1","Pop1_Sample2","Pop2_Sample3","Taxa")
+```
 
 The `decon()` function is the primary function of the package. To decontaminate these samples on default settings, use the following code 
 (`data` is your data frame, `numb.blanks` specifies the number of blanks in your data frame, `taxa` specifies whether your data frame
 includes a taxa column).
-```decontaminated <- decon(data = example,numb.blanks=2,taxa=T)```
+```decontaminated <- decon(data = example,numb.blanks=2,taxa=T)
+```
 
 In cases with many samples and OTUs that were entirely from contamination in all samples, you may find that microDecon correctly eliminates
 the contamination in most samples, but in a few samples, a handful of reads remain. This can be corrected by applying filtering thresholds
@@ -45,6 +49,7 @@ some other sensible a priori grouping criteria (as with `decon()` only OTUs that
 default settings use the following code (`data` is your output from `decon()`, `taxa` specifies whether your data frame includes a taxa 
 column, `numb.ind` gives the number of individuals in each group [in the order that they occur in your data frame], blanks will have been
 condensed to a single mean column by `decon()` so you do not need to specify them here).
-```decontaminated.final <- remove.thresh(data = decontaminated, taxa=T, numb.ind = c(2,1))```
+```decontaminated.final <- remove.thresh(data = decontaminated, taxa=T, numb.ind = c(2,1))
+```
 
 For details on additional options and when you should use settings other than the defaults, see the User's Guide.
