@@ -17,7 +17,7 @@ install.packages("devtools") #Install devtools (if not already installed)
 
 library(devtools) #Load devtools
 
-devtools::install_github(“donaldtmcknight/microDecon") #Install microDecon
+devtools::install_github("donaldtmcknight/microDecon") #Install microDecon
 ```
 
 ## Running the package
