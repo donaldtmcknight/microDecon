@@ -14,9 +14,6 @@ User's Guide.
 Simply copy, paste, and run the following code in R.
 ```
 install.packages("devtools") #Install devtools (if not already installed)
-
-library(devtools) #Load devtools
-
 devtools::install_github("donaldtmcknight/microDecon") #Install microDecon
 ```
 
