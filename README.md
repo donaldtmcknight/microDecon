@@ -3,10 +3,12 @@ An R package for removing contamination from metabarcoding (e.g., microbiome) da
 
 ## Description
 Contamination is a serious and widespread problem in metabarcoding studies (particularly bacterial microbiome studies). microDecon provides 
-an easy method of identifying and removing contaminant reads post-sequencing. It uses the data in one or more blank samples that were carried
-throughout the entire project (collection, extraction, amplification, and sequencing) to identify and remove the reads in each actual sample 
-that are from contamination. Because it removes reads rather than entire OTUs, it is a large improvement over existing methods. A more
-detailed explanation of the algorithms it uses can be found in the user's guide.
+an easy method of identifying and removing contaminant reads post-sequencing. It uses the data in one or more blank samples that were
+carried throughout the entire project (collection, extraction, amplification, and sequencing) to identify and remove the reads in each
+actual sample that are from contamination. Because it removes reads rather than entire OTUs, it is a large improvement over existing
+methods. It was designed specifically for microbiome sequencing studies (e.g., 16S bacterial studies and ITS fungal studies), but it
+should be applicatble to metabarcoding studies more generally. A more detailed explanation of the algorithms it uses can be found in the
+User's Guide.
 
 ## Installation
 Simply copy, paste, and run the following code in R.
@@ -26,8 +28,7 @@ library(microDecon)
 ```
 
 Load a data frame with a column of OTU IDs, at least one column from a blank sample, at least one column from actual samples, and (optional)
-a column with taxonomic information. For example, the following OTU data frame has two blanks, three samples (from two populations), and taxa
-column (the columns must be in the order: OTU IDs, blanks, samples [samples should be grouped by population, species, etc.], taxa).
+a column with taxonomic information. For example, the following OTU data frame has two blanks, three samples (from two populations), and taxa column (the columns must be in the order: OTU IDs, blanks, samples [samples should be grouped by population, species, etc.], taxa).
 ```
 example <- cbind.data.frame(c("OTU1","OTU2","OTU3","OTU4","OTU5"),
                         c(0,200,1000,50,0),
@@ -57,4 +58,4 @@ condensed to a single mean column by `decon()` so you do not need to specify the
 decontaminated.final <- remove.thresh(data = decontaminated, taxa=T, numb.ind = c(2,1))
 ```
 
-For details on additional options and when you should use settings other than the defaults, see the User's Guide.
+For details on additional options and when you should use settings other than the defaults, see the User's Guide and help files in R.
