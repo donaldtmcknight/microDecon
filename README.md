@@ -13,7 +13,7 @@ User's Guide.
 ## Installation
 Simply copy, paste, and run the following code in R.
 ```
-install.packages("devtools") #Instal devtools (if not already installed)
+install.packages("devtools") #Install devtools (if not already installed)
 
 library(devtools) #Load devtools
 
@@ -27,7 +27,7 @@ library(microDecon)
 ```
 
 Load a data frame with a column of OTU IDs, at least one column from a blank sample, at least one column from actual samples, and (optional)
-a column with taxonomic information. For example, the following OTU data frame has two blanks, three samples (from two populations), and taxa column (the columns must be in the order: OTU IDs, blanks, samples [samples should be grouped by population, species, etc.], taxa).
+a column with taxonomic information. For example, the following OTU data frame has two blanks, three samples (from two populations), and a taxa column (the columns must be in that order: OTU IDs, blanks, samples [samples should be grouped by population, species, etc.], taxa).
 ```
 example <- cbind.data.frame(c("OTU1","OTU2","OTU3","OTU4","OTU5"),
                         c(0,200,1000,50,0),
@@ -51,7 +51,7 @@ the contamination in most samples, but in a few samples, a handful of reads rema
 using the `remove.thesh()` function. This takes the output of `decon()`. It is best to apply the filtering within species, population, or
 some other sensible a priori grouping criteria (as with `decon()` only OTUs that amplified in the blank are affected). To run it on the 
 default settings use the following code (`data` is your output from `decon()`, `taxa` specifies whether your data frame includes a taxa 
-column, `numb.ind` gives the number of individuals in each group [in the order that they occur in your data frame], blanks will have been
+column, `numb.ind` gives the number of individuals in each group [in the order that they occur in your data frame]; blanks will have been
 condensed to a single mean column by `decon()` so you do not need to specify them here).
 ```
 decontaminated.final <- remove.thresh(data = decontaminated, taxa=T, numb.ind = c(2,1))
