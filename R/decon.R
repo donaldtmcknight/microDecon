@@ -17,8 +17,10 @@
 decon <- function(data,numb.blanks = 1,taxa=T,runs=2,low.threshold=40,up.threshold=400){
 
   if(numb.blanks >1){
+    #calcualtes mean reads per blank
+    mean.reads.blank <- mean(colSums(data[,2:(numb.blanks+1)]))
     #calculates mean blank
-    mean.blank <- rowMeans(data[,2:(numb.blanks+1)])
+    mean.blank <- rowMeans(apply(data[,2:(numb.blanks+1)],2,prop.trans))*mean.reads.blank
     #replaces first blank with mean blank
     data[,2] <- mean.blank
     #removes other blanks

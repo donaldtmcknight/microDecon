@@ -14,8 +14,9 @@
 decon.regress2<- function(data,numb.blanks = 1,taxa=T){
 
   if(numb.blanks >1){
+    mean.reads.blank <- mean(colSums(data[,2:(numb.blanks+1)]))
     #calculates mean blank
-    mean.blank <- rowMeans(data[,2:(numb.blanks+1)])
+    mean.blank <- rowMeans(apply(data[,2:(numb.blanks+1)],2,prop.trans))*mean.reads.blank
     #replaces first blank with mean blank
     data[,2] <- mean.blank
     #removes other blanks
