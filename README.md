@@ -13,8 +13,8 @@ User's Guide.
 ## Installation
 Simply copy, paste, and run the following code in R.
 ```
-install.packages("devtools") #Install devtools (if not already installed)
-devtools::install_github("donaldtmcknight/microDecon") #Install microDecon
+install.packages("devtools") #Installs devtools (if not already installed)
+devtools::install_github("donaldtmcknight/microDecon") #Installs microDecon
 ```
 
 ## Running the package
@@ -24,7 +24,7 @@ library(microDecon)
 ```
 
 Load a data frame with a column of OTU IDs, at least one column from a blank sample, at least one column from actual samples, and (optional)
-a column with taxonomic information. For example, the following OTU data frame has two blanks, three samples (from two populations), and a taxa column (the columns must be in that order: OTU IDs, blanks, samples [samples should be grouped by population, species, etc.], taxa).
+a column with taxonomic information. For example, the following OTU data frame has three blanks, three samples (from two populations), and a taxa column (the columns must be in that order: OTU IDs, blanks, samples [samples should be grouped by population, species, etc.], taxa).
 ```
 example <- cbind.data.frame(c("OTU1","OTU2","OTU3","OTU4","OTU5","OTU6"),
                         c(0,200,1000,50,0,25),
@@ -38,7 +38,7 @@ colnames(example) <- c("OTU_ID","Blank1","Blank2","Blank3","Pop1_Sample1","Pop1_
 ```
 
 The `decon()` function is the primary function of the package (it is a warpper for all other functions). To decontaminate these samples on default settings, use the following code 
-(`data` is your data frame, `numb.blanks` specifies the number of blanks in your data frame, `numb.ind` specifies the number of individuals per group (e.g. population), `taxa` specifies whether your data frame
+(`data` is your data frame, `numb.blanks` specifies the number of blanks in your data frame, `numb.ind` specifies the number of individuals per group (e.g., population), `taxa` specifies whether your data frame
 includes a taxa column).
 ```
 decontaminated <- decon(data = example,numb.blanks=3,numb.ind=c(2,1),taxa=T)
