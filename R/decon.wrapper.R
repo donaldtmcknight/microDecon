@@ -1,0 +1,37 @@
+#'Wrapper for all other microDecon functions.
+#'
+#'This function runs the whole pacakge in a single step. It runs remove.cont(), then remove.thresh(), then decon.diff(). Takes a data frame of metabarcoding reads (structured as a column of OTU IDs, followed by at least one column of reads from blanks, followed by columns of reads from samples [ordered by groups], optionally followed by a column of taxonomic information). It identifies and removes the reads that are from contamination and returns a decontaminated OTU table and summary statistics. Only OTUs that amplified in the blank(s) are affected.
+#'
+#'@param data A data frame of metabarcoding read data consisting of at least 3 columns in this order: a column of unique OTU names/labels, at least one column of read data from a blank sample (this contains your known contaminant reads), at least one column of read data for an actual sample (each column is a sample, each row is an OTU, and each cell is the number of reads). It can optionally include a final column with taxonomy information. If multiple blanks are included (recommended), they must be in consecutive columns, starting with column 2. Individuals must be ordered by group (e.g., species, populations, etc.).
+#'@param numb.blanks Numeric (default = 1). Specifies the number of blanks included in the data set (if multiple blanks are included, they must be in consecutive columns, starting with column 2).
+#'@param numb.ind A vector of numbers listing the number of individuals in each user-specified group (e.g., different populations or different species could be treated as different groups). Data must be sorted by these groups beforehand.
+#'@param taxa Logical (T/F). Specifies whether or not the last column contains taxonomic information (default = T)
+#'@param runs Numeric (default = 2). Specifies the number of times that the function should run the decontamination procedure on the data. Based on simulation results, using two runs is best on average, but using one run is better if there is very little contamination, and using more than two runs is better if there is substantial contamination (see User Guide section 1.4.3).
+#'@param regression Numeric (default = 0). Specifies the regression equation used to calculate the constant. 0 = it chooses between regression 1 and regression 2 based on the low.threshold and up.threshold arguments (this is strongly recommended). 1 = it always uses regression 1. 2 = it always uses regression 2. See User Guide section 1.4.2.
+#'@param thresh Numeric (default = 0.7). A number written as a proportion. This is the threshold at which if that proportion of 0s are present for an OTU within a group, all samples will be set to 0 for that OTU for that group (e.g., if thresh = 0.7, then if, for a particular OTU, 70 percent of samples are 0 within a group, all samples become 0 for that OTU). The threshold always rounds down to calculate the maximum number of zeros that can be present (e.g., if thresh = 0.7 and there are 11 samples, then any OTU with 7 or more 0s will become 0 for all samples in that group). It will not do anything to groups with four or fewer samples. Set to 1 if you do not want to apply this threshold
+#'@param prop.thresh Numeric (default = 0.00005). A number written as a proportion. This is the threshold at which if the number of reads for a particular OTU are below this proportion, the OTU will be set to zero for all individuals in that group (e.g., if a particular OTU makes up 0.001 percent of all of the reads for a group, then at prop.thresh = 0.00005, that OTU would be set to 0 for all individuals in the group [0.00005 = 0.005 percent]). The proportions are based on all reads for all individuals in a group (including OTUs that were not in the blank). It is necessary to relax this threshold (e.g., 0.0005) for very small data sets (see User Guide section 1.4.4) Set to 0 if you do not want to use this threshold.
+#'@param low.threshold Numeric (default = 40). Selects the lower point for switching between regression 1 and regression 2. It uses regression 2 anytime that the estimated overlap is <low.threshold or >up.threshold. It is usually best not to change this value.
+#'@param up.threshold Numeric (default = 400). Selects the higher point for switching between regression 1 and regression 2. It uses regression 2 anytime that the estimated overlap is <low.threshold or >up.threshold. It is usually best not to change this value.
+#'
+#'@return A list of five data frames that can be accessed with $. These are useful for both seeing and recording the changes microDecon made, as well as checking that the changes make sense based on the biological understanding of the system under study.
+#' 
+#'  $decon.table = A data frame of decontaminated OTU data. It is structured the same as the original data frame (data). However, if several blanks were input, the output will include only a single Mean.blank column that is the mean of the proportions of those blanks multiplied by the mean number of reads in the blanks. Additionally, the order of the rows may be different, and any OTUs for which all reads were removed will have been deleted (their information will still be shown in the other outputs).
+#'
+#'  $reads.removed = An OTU table showing the number of reads that were removed from each OTU that amplified in the blank (per individual).
+#'
+#'  $difference.sum = The total number of reads that were removed from each OTU that amplified in the blank (per group as well as for the entire data set; groups are in the same order as specified by the numb.ind argument).
+#'  
+#'  $difference.mean = The average number of reads that were removed from each OTU that amplified in the blank (per group as well as for the entire data set; groups are in the same order as specified by the numb.ind argument).
+#'  
+#'  $OTUs.removed = A data frame showing the identities of OTUs that were completely removed from either particular groups or the entire data set.
+#'
+#'@export decon
+#'
+#
+decon <- function(data,numb.blanks = 1,numb.ind,taxa=T,runs=2,thresh = 0.7,prop.thresh = 0.00005,regression=0,low.threshold=40,up.threshold=400){
+  
+  final.result <- remove.cont(data,numb.blanks,taxa,runs,regression,low.threshold,up.threshold)
+  final.result <- remove.thresh(final.result,taxa,numb.ind,thresh,prop.thresh)
+  final.result <- decon.diff(data,final.result,numb.blanks,numb.ind,taxa)
+  final.result}
+
