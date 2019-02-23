@@ -1,4 +1,4 @@
-#'Decontaminate metabarcoding data based on optimal regressions
+#'Decontaminate metabarcoding data based on optimal regressions (test)
 #'
 #'Takes a data frame of metabacroding reads (structured as a column of OTU IDs, followed by at least one column of reads from blanks, followed by columns of reads from samples, optionally followed by a column of taxonomic information). Ii identifies the reads that are from contamination, then removes them. It estimates the number of overlapping OTUs between the sample and the blank, and it chooses the best equation based on that. Default (recommended) is to use the decon.primary() function anytime that the estimated overlap is <40 or >400, and to use the decon.secondary() function anytime that it is >=40 or <= 400.
 #'
