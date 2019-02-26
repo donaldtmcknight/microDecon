@@ -11,7 +11,7 @@ decon.diff(data, output, numb.blanks = 1, numb.ind, taxa = T)
 
 \item{output}{The data frame that was returned by remove.cont() or remove.thresh().}
 
-\item{numb.blanks}{Numeric (default = 1). Specifies the number of blanks included in the “data” argument (if multiple blanks are included, they must be in consecutive columns, starting with column 2). This only applies to the number in the “data” argument. The number in the “output” argument will always be 1 because remove.cont() returns a single mean blank.}
+\item{numb.blanks}{Numeric (default = 1). Specifies the number of blanks included in the “data” argument (if multiple blanks are included, they must be in consecutive columns, starting with column 2). This only applies to the number in the data argument. The number in the output argument will always be 1 because remove.cont() returns a single mean blank.}
 
 \item{numb.ind}{A vector of numbers listing the number of individuals in each user-specified group (e.g., different populations could be treated as different groups). Data must have been sorted by these groups before running remove.cont().}
 
@@ -19,6 +19,8 @@ decon.diff(data, output, numb.blanks = 1, numb.ind, taxa = T)
 }
 \value{
 A list of five data frames that can be accessed with $. These are useful for both seeing and recording the changes microDecon made, as well as checking that the changes make sense based on the biological understanding of the system under study.
+
+ NA values indicate that an OTU had zero reads for a given group or sample prior to decontamination.
  
  $decon.table = A data frame of decontaminated OTU data. It is structured the same as the original data frame (data). However, if several blanks were input, the output will include only a single Mean.blank column that is the mean of the proportions of those blanks multiplied by the mean number of reads in the blanks. Additionally, the order of the rows may be different, and any OTUs for which all reads were removed will have been deleted (their information will still be shown in the other outputs).
  

@@ -4,11 +4,13 @@
 #'
 #'@param data The original data frame that you input into remove.cont(). Individuals must have been ordered by groups (populations, species, etc.) as in remove.thresh().
 #'@param output The data frame that was returned by remove.cont() or remove.thresh().
-#'@param numb.blanks Numeric (default = 1). Specifies the number of blanks included in the “data” argument (if multiple blanks are included, they must be in consecutive columns, starting with column 2). This only applies to the number in the “data” argument. The number in the “output” argument will always be 1 because remove.cont() returns a single mean blank.
+#'@param numb.blanks Numeric (default = 1). Specifies the number of blanks included in the “data” argument (if multiple blanks are included, they must be in consecutive columns, starting with column 2). This only applies to the number in the data argument. The number in the output argument will always be 1 because remove.cont() returns a single mean blank.
 #'@param numb.ind A vector of numbers listing the number of individuals in each user-specified group (e.g., different populations could be treated as different groups). Data must have been sorted by these groups before running remove.cont().
 #'@param taxa Logical (T/F). Specifies whether or not the last column contains taxonomic information (default = T).
 #'
 #'@return A list of five data frames that can be accessed with $. These are useful for both seeing and recording the changes microDecon made, as well as checking that the changes make sense based on the biological understanding of the system under study.
+#'
+#'  NA values indicate that an OTU had zero reads for a given group or sample prior to decontamination.
 #'  
 #'  $decon.table = A data frame of decontaminated OTU data. It is structured the same as the original data frame (data). However, if several blanks were input, the output will include only a single Mean.blank column that is the mean of the proportions of those blanks multiplied by the mean number of reads in the blanks. Additionally, the order of the rows may be different, and any OTUs for which all reads were removed will have been deleted (their information will still be shown in the other outputs).
 #'  
@@ -37,6 +39,8 @@ decon.diff <- function(data,output,numb.blanks=1,numb.ind,taxa=T){
     col.names.data <- colnames(data)
     col.names.data[2] <- "Mean.blank"
     colnames(data) <- col.names.data}
+  
+  cnames <- colnames(data)[3:ncol(data)]
 
   data <- data[data[,2] > 0,] #subsets to data in blank
   output.sub <- output[output[,2] > 0,] #subsets to data in blank
@@ -54,11 +58,14 @@ decon.diff <- function(data,output,numb.blanks=1,numb.ind,taxa=T){
   data <- cbind.data.frame(data[,1:2],data.sub)
   
   difference <- cbind.data.frame(data[,1:2],(data[,3:ncol(data)]-output.sub[,3:ncol(output.sub)])) #calcualtes number of reads removed
-  
-  difference.sum <- cbind.data.frame(difference[,1:2],rowSums(difference[,3:ncol(difference)],na.rm=T))
-  difference.mean <- cbind.data.frame(difference[,1:2],rowMeans(difference[,3:ncol(difference)],na.rm=T))
-  
-  removed <- data[,3:ncol(data)]-difference[,3:ncol(difference)] # subtracts reads removed from data and sums (0=all reads removed)
+
+  if(ncol(difference) > 3){
+    difference.sum <- cbind.data.frame(difference[,1:2],rowSums(difference[,3:ncol(difference)],na.rm=T))
+    difference.mean <- cbind.data.frame(difference[,1:2],rowMeans(difference[,3:ncol(difference)],na.rm=T))}else{
+    difference.sum <- difference
+      difference.mean <- difference}  
+ 
+  removed <- cbind.data.frame(data[,3:ncol(data)]-difference[,3:ncol(difference)]) # subtracts reads removed from data and sums (0=all reads removed)
  
   l.0 <- function(x){length((x[x==0]))} #function for counting the number of zeros presant
   l.NA <- function(x){length(x[(is.na(x)==T)])} #function for counting the number of NA presant (these were 0 prior to decon)
@@ -70,20 +77,20 @@ decon.diff <- function(data,output,numb.blanks=1,numb.ind,taxa=T){
   #for each group returns a 0 if all OTUs were removed, combines with total.remvoed
   for(g in 1:length(numb.ind)){
     if(g==1){sum.g <- 1} #sum.g = sum of previous numbers of individuals (set to 1 for round 1)
-    group.g <- removed[,sum.g:(sum.g+numb.ind[g]-1)]
+    group.g <- cbind.data.frame(removed[,sum.g:(sum.g+numb.ind[g]-1)])
     group.g <- cbind.data.frame(apply(group.g,1,l.0)-apply(group.g,1,l.NA),apply(group.g,1,l.0)/ncol(group.g)) #counts number of zeros from decon and total number of zeros (NA) (from original data and decon) divided by number of individals
     group.g <- apply(group.g,1,true.0)
     total.removed <- cbind.data.frame(total.removed,group.g)
     
-    diff.sum.g <- rowSums(difference[,(sum.g+2):(sum.g+numb.ind[g]+1)],na.rm=T)
+    if(numb.ind[g] > 1){diff.sum.g <- rowSums(difference[,(sum.g+2):(sum.g+numb.ind[g]+1)],na.rm=T)}else{diff.sum.g <- difference[,(sum.g+2)]}
     difference.sum <- cbind.data.frame(difference.sum,diff.sum.g)
     
-    diff.mean.g <- rowMeans(difference[,(sum.g+2):(sum.g+numb.ind[g]+1)],na.rm=T)
+    diff.mean.g <- rowMeans(cbind.data.frame(difference[,(sum.g+2):(sum.g+numb.ind[g]+1)]),na.rm=T)
     difference.mean <- cbind.data.frame(difference.mean,diff.mean.g)
     
     sum.g <- sum.g+numb.ind[g]}
   
-  difference.mean[is.na(difference.mean)==T] <- 0 #relaces nan values from otus that were not present to beign with
+  difference.mean[is.na(difference.mean)==T] <- NA #relaces nan values from otus that were not present to beign with
   
   total.removed <- cbind.data.frame(data[,1:2],total.removed,rowSums(total.removed)) #adds column with number of groups form which it was totall removed
   colnames(total.removed)[ncol(total.removed)] <- "rem"
@@ -106,14 +113,22 @@ decon.diff <- function(data,output,numb.blanks=1,numb.ind,taxa=T){
      result.removed <- setdiff(output[,1],total.removed[total.removed$All.groups == "Totally.removed",1]) #returns vector of OTUs that were not totally removed
      result.removed <- subset(output,output[,1]%in%result.removed)}else{ #subsets data to those OTUs
   
-      if(taxa == T){ #adds taxa info
-      difference <- merge(difference,save.taxa,colnames(save.taxa)[1])}
-      
       result.removed <- output
       total.removed <- "no OTUs were totally removed from any groups"}
   
-  colnames(difference.mean)[3:ncol(difference.mean)] <- c("All.groups",gsub(" ","",paste("Group",c(1:length(numb.ind)))))
-  colnames(difference.sum)[3:ncol(difference.sum)] <- c("All.groups",gsub(" ","",paste("Group",c(1:length(numb.ind)))))
-      
+  if(taxa == T){
+    colnames(difference.mean)[3:ncol(difference.mean)] <- c("All.groups",gsub(" ","",paste("Group",c(1:length(numb.ind)))))
+    colnames(difference.sum)[3:ncol(difference.sum)] <- c("All.groups",gsub(" ","",paste("Group",c(1:length(numb.ind)))))
+    
+    difference.mean <- merge(difference.mean,save.taxa,by=colnames(save.taxa)[1])
+    difference.sum <- merge(difference.sum,save.taxa,by=colnames(save.taxa)[1])
+    difference <- merge(difference,save.taxa,by=colnames(save.taxa)[1])
+  
+    }else{
+      colnames(difference.mean)[3:ncol(difference.mean)] <- c("All.groups",gsub(" ","",paste("Group",c(1:length(numb.ind)))))
+      colnames(difference.sum)[3:ncol(difference.sum)] <- c("All.groups",gsub(" ","",paste("Group",c(1:length(numb.ind)))))}     
+  
+  colnames(difference)[3:ncol(difference)] <- cnames
+  
   results <- list("reads.removed"=difference,"mean.per.group"=difference.mean,"sum.per.group"=difference.sum,"OTUs.removed"=total.removed,"decon.table" = result.removed)}
   

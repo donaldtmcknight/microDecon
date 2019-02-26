@@ -32,6 +32,8 @@ decon(data, numb.blanks = 1, numb.ind, taxa = T, runs = 2, thresh = 0.7,
 \value{
 A list of five data frames that can be accessed with $. These are useful for both seeing and recording the changes microDecon made, as well as checking that the changes make sense based on the biological understanding of the system under study.
 
+ NA values indicate that an OTU had zero reads for a given group or sample prior to decontamination.
+ 
  $decon.table = A data frame of decontaminated OTU data. It is structured the same as the original data frame (data). However, if several blanks were input, the output will include only a single Mean.blank column that is the mean of the proportions of those blanks multiplied by the mean number of reads in the blanks. Additionally, the order of the rows may be different, and any OTUs for which all reads were removed will have been deleted (their information will still be shown in the other outputs).
 
  $reads.removed = An OTU table showing the number of reads that were removed from each OTU that amplified in the blank (per individual).
