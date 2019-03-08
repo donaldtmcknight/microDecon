@@ -36,7 +36,7 @@ decon <- function(data,numb.blanks = 1,numb.ind,taxa=T,runs=2,thresh = 0.7,prop.
   if(sum(1,numb.blanks,numb.ind,if(taxa==T){1}) != ncol(data)){stop("Total number of input columns does not match the number of columns in 'data.' Check that an OTU ID column is present, the number of blanks (numb.blanks) and number of individuals (numb.ind) are entered correctly, and the taxa column is correctly specified as present or absent")} 
   
   final.result <- remove.cont(data,numb.blanks,taxa,runs,regression,low.threshold,up.threshold)
-  final.result <- remove.thresh(final.result,taxa,numb.ind,thresh,prop.thresh)
+  final.result <- remove.thresh(final.result,numb.ind,taxa,thresh,prop.thresh)
   final.result <- decon.diff(data,final.result,numb.blanks,numb.ind,taxa)
   final.result}
 
