@@ -4,14 +4,14 @@
 \alias{remove.thresh}
 \title{Set OTUs to zero based on thresholds}
 \usage{
-remove.thresh(data, taxa = T, numb.ind, thresh = 0.7, prop.thresh = 5e-05)
+remove.thresh(data, numb.ind, taxa = T, thresh = 0.7, prop.thresh = 5e-05)
 }
 \arguments{
 \item{data}{A data frame of metabarcoding read data consisting of at least 3 columns in this order: a column of unique OTU names/labels, at least one column of read data from a blank sample (this contains your known contaminant reads), at least one column of read data for an actual sample (each column is a sample, each row is an OTU, and each cell is the number of reads). It can optionally include a final column with taxonomy information. If multiple blanks are included (recommended), they must be in consecutive columns, starting with column 2. Individuals must be ordered by group (e.g., species, populations, etc.)}
 
-\item{taxa}{Logical (T/F). Specifies whether or not the last column contains taxonomic information (default = T)}
-
 \item{numb.ind}{A vector of numbers listing the number of individuals in each user-specified group (e.g., different populations or different species could be treated as different groups). Data must be sorted by these groups beforehand.}
+
+\item{taxa}{Logical (T/F). Specifies whether or not the last column contains taxonomic information (default = T)}
 
 \item{thresh}{Numeric (default = 0.7). A number written as a proportion. This is the threshold at which if that proportion of 0s are present for an OTU within a group, all samples will be set to 0 for that OTU for that group (e.g., if thresh = 0.7, then if, for a particular OTU, 70 percent of samples are 0 within a group, all samples become 0 for that OTU). The threshold always rounds down to calculate the maximum number of zeros that can be present (e.g., if thresh = 0.7 and there are 11 samples, then any OTU with 7 or more 0s will become 0 for all samples in that group). It will not do anything to groups with four or fewer samples. Set to 1 if you do not want to apply this threshold}
 

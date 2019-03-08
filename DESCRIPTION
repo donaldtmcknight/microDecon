@@ -1,7 +1,7 @@
 Package: microDecon
 Type: Package
 Title: A package for removing contaminant sequencing reads from metabarcoding studies
-Version: 1.0.1
+Version: 1.0.2
 Author: Donald McKnight
 Maintainer: Donald McKnight <donald.mcknight@my.jcu.edu.au>
 Description: The microDecon package provides functions for removing contamination.

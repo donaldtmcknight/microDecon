@@ -13,7 +13,10 @@
 #'@export remove.thresh
 #'
 #'
-remove.thresh <- function(data,taxa=T,numb.ind,thresh = 0.7,prop.thresh = 0.00005){
+remove.thresh <- function(data,numb.ind,taxa=T,thresh = 0.7,prop.thresh = 0.00005){
+
+  if(length(unique(data[,1]))<length(data[,1])){stop("OTU ID column (column 1) contains duplicate values. All OTUs must have a unique ID")}
+  if(sum(2,numb.ind,if(taxa==T){1}) != ncol(data)){stop("Total number of input columns does not match the number of columns in 'data.' Check that an OTU ID column is present, there is a single column for the blank, the number of individuals (numb.ind) are entered correctly, and the taxa column is correctly specified as present or absent")} 
 
   column.names <- colnames(data)
   if(taxa == T){data.taxa <- cbind.data.frame(data[,1],data[,ncol(data)])

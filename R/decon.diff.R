@@ -26,7 +26,9 @@
 #'
 #'
 decon.diff <- function(data,output,numb.blanks=1,numb.ind,taxa=T){
-  
+ 
+  if(sum(1,numb.blanks,numb.ind,if(taxa==T){1}) != ncol(data)){stop("Total number of input columns does not match the number of columns in 'data.' Check that an OTU ID column is present, the number of blanks (numb.blanks) and number of individuals (numb.ind) are entered correctly, and the taxa column is correctly specified as present or absent")} 
+
   if(numb.blanks >1){
     #calcualtes mean reads per blank
     mean.reads.blank <- mean(colSums(data[,2:(numb.blanks+1)]))

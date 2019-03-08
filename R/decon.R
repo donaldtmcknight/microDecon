@@ -16,7 +16,8 @@
 #'
 remove.cont <- function(data,numb.blanks = 1,taxa=T,runs=2,regression=0,low.threshold=40,up.threshold=400){
   
-  
+  if(length(unique(data[,1]))<length(data[,1])){stop("OTU ID column (column 1) contains duplicate values. All OTUs must have a unique ID")}
+
   if(numb.blanks >1){
     #calcualtes mean reads per blank
     mean.reads.blank <- mean(colSums(data[,2:(numb.blanks+1)]))
