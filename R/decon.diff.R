@@ -94,21 +94,28 @@ decon.diff <- function(data,output,numb.blanks=1,numb.ind,taxa=T){
   
   difference.mean[is.na(difference.mean)==T] <- NA #relaces nan values from otus that were not present to beign with
   
-  total.removed <- cbind.data.frame(data[,1:2],total.removed,rowSums(total.removed)) #adds column with number of groups form which it was totall removed
+  total.removed <- cbind.data.frame(data[,1:2],total.removed,rowSums(total.removed)) #adds column with number of groups from which it was totally removed
   colnames(total.removed)[ncol(total.removed)] <- "rem"
-
-  total.removed <- total.removed[total.removed$rem > 0,] #subsets to OTUs where something had been totally removed at some point
-  total.removed <-  total.removed[,-ncol( total.removed )] #removes column with info on number totall removed
-  total.removed.otu <- total.removed[,1:2] #saves otu and blank column for subset data
-  total.removed <-total.removed[,3:ncol(total.removed)]
-  
+total.removed <- total.removed[total.removed$rem > 0,] #subsets to OTUs where something had been totally removed at some point
   if(nrow(total.removed) > 0){
+  
+    total.removed <-  total.removed[,-ncol( total.removed )] #removes column with info on number totally removed
+    
+    #orders total.removed to be the same as difference.mean, then uses the NA locations in difference.mean to assign NA to total.removed
+    total.removed <- total.removed[order(total.removed[,1]),]
+    diff.na <- subset(  difference.mean,difference.mean[,1]%in% total.removed[,1])
+    diff.na <- diff.na[order(diff.na[,1]),]
+    total.removed[is.na(diff.na)==T] <- NA
+    
+    total.removed.otu <- total.removed[,1:2] #saves otu and blank column for subset data
+    total.removed <-total.removed[,3:ncol(total.removed)]
+  
     total.removed[total.removed == 0] <- "-"
     total.removed[total.removed == 1] <- "Totally.removed"
     total.removed <- cbind.data.frame(total.removed.otu,total.removed)
     
     colnames(total.removed)[3:ncol(total.removed)] <- c("All.groups",gsub(" ","",paste("Group",c(1:length(numb.ind)))))
-   
+    
     if(taxa == T){ #adds taxa info
       total.removed <- merge(total.removed,save.taxa,colnames(save.taxa)[1],all.x=F,all.y=F)}
     

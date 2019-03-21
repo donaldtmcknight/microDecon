@@ -4,7 +4,8 @@
 \alias{remove.thresh}
 \title{Set OTUs to zero based on thresholds}
 \usage{
-remove.thresh(data, numb.ind, taxa = T, thresh = 0.7, prop.thresh = 5e-05)
+remove.thresh(data, numb.ind, taxa = T, thresh = 0.7,
+  prop.thresh = 5e-05)
 }
 \arguments{
 \item{data}{A data frame of metabarcoding read data consisting of at least 3 columns in this order: a column of unique OTU names/labels, at least one column of read data from a blank sample (this contains your known contaminant reads), at least one column of read data for an actual sample (each column is a sample, each row is an OTU, and each cell is the number of reads). It can optionally include a final column with taxonomy information. If multiple blanks are included (recommended), they must be in consecutive columns, starting with column 2. Individuals must be ordered by group (e.g., species, populations, etc.)}

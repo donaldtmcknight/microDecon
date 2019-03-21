@@ -6,6 +6,6 @@ Author: Donald McKnight
 Maintainer: Donald McKnight <donald.mcknight@my.jcu.edu.au>
 Description: The microDecon package provides functions for removing contamination.
 LazyData: true
+Encoding: UTF-8
 License: GPL (>= 2)
-RoxygenNote: 6.0.1
-
+RoxygenNote: 6.1.1
