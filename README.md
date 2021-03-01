@@ -1,4 +1,5 @@
 # microDecon
+![example branch parameter](https://github.com/donaldtmcknight/microdecon/actions/workflows/r.yml/badge.svg?branch=development)
 An R package for removing contamination from metabarcoding (e.g., microbiome) datasets post-sequencing
 
 ## Description
