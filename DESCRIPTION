@@ -9,3 +9,6 @@ LazyData: true
 Encoding: UTF-8
 License: GPL (>= 2)
 RoxygenNote: 6.1.1
+Suggests: 
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
