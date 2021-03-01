@@ -10,3 +10,4 @@ test_that("load dataset", {
 
 
 #run checks using devtools::test()
+#also need the .github/workflows/r.yml (borrow code from https://github.com/r-lib/actions/blob/master/.github/workflows/check-full.yaml)
