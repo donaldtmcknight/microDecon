@@ -1,6 +1,6 @@
 test_that("load dataset", {
   
-  load( system.file("Example_1.RData", package = "microDecon"))
+  load( system.file("testdata","Example_1.RData", package = "microDecon"))
   
   expect_type(Example_1,"list")
   expect_equal(dim(Example_1),c(6,8))
