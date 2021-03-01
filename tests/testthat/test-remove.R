@@ -1,3 +1,9 @@
-test_that("multiplication works", {
-  expect_equal(2 * 2, 4)
+test_that("load dataset", {
+  
+  load( sprintf("%s/data/Example_1.Rdata",getwd()))
+  
+  expect_type(Example_1,"list")
+  expect_equal(dim(Example_1),c(6,8))
+  
+  
 })
